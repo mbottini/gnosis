@@ -9,6 +9,8 @@ pwHash = lambda pw: str(int(md5(pw.encode('utf-8')).hexdigest(), 16))
 app = Flask(__name__)
 CORS(app)
 
+#Currently all our functions are taking an existing connection as a parameter. I assume with an ORM we will end up rewriting all of this
+
 @app.route('/create/tracker', methods=['POST'])
 def createTracker(dbConn, student_id, carton_id, card_type_id, deck_id):
     cur = dbConn.cursor()

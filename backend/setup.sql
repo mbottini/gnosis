@@ -86,6 +86,7 @@ CREATE TABLE IF NOT EXISTS card (
     FOREIGN KEY(deck_id) REFERENCES deck(id)
 );
 
+--Deck ID may be irrelevant here given that we have a card_id and the card_id is associated with a deck_id
 CREATE TABLE IF NOT EXISTS tracker (
     id INTEGER PRIMARY KEY,
     student_id INTEGER NOT NULL,
