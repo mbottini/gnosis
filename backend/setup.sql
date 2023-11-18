@@ -86,7 +86,7 @@ CREATE TABLE IF NOT EXISTS card (
     FOREIGN KEY(deck_id) REFERENCES deck(id)
 );
 
---Deck ID may be irrelevant here given that we have a card_id and the card_id is associated with a deck_id
+--Deck ID may be irrelevant here given that we have a card_id and the card_id is associated with a deck_id. Note that carton_id is NOT irrelevant. When the tracker comes up for review, the machine grabs the carton ID and the card type ID and creates the card from scratch by feeding the data in the carton through the card type
 CREATE TABLE IF NOT EXISTS tracker (
     id INTEGER PRIMARY KEY,
     student_id INTEGER NOT NULL,
