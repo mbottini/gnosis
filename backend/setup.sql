@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS admin (
+CREATE TABLE IF NOT EXISTS school_admin (
     id INTEGER PRIMARY KEY,
     username TEXT NOT NULL,
     passwd BLOB NOT NULL,
@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS school (
     id INTEGER PRIMARY KEY,
     admin_id INTEGER NOT NULL,
     school_name TEXT NOT NULL,
-    FOREIGN KEY(admin_id) REFERENCES admin(id)
+    FOREIGN KEY(admin_id) REFERENCES school_admin(id)
 );
 
 CREATE TABLE IF NOT EXISTS student (
@@ -39,6 +39,13 @@ CREATE TABLE IF NOT EXISTS course (
     FOREIGN KEY(school_id) REFERENCES school(id)
 );
 
+CREATE TABLE IF NOT EXISTS deck (
+    id INTEGER PRIMARY KEY,
+    deck_name TEXT NOT NULL,
+    course_id INTEGER NOT NULL,
+    FOREIGN KEY(course_id) REFERENCES course(id)
+);
+
 CREATE TABLE IF NOT EXISTS template (
     id INTEGER PRIMARY KEY
 );
@@ -62,18 +69,32 @@ CREATE TABLE IF NOT EXISTS card_type (
     id INTEGER PRIMARY KEY,
     card_type_name TEXT NOT NULL,
     template_id INTEGER NOT NULL,
+    frontSide JSON NOT NULL, --maybe this is JSON, maybe it's some sort of HTML thing represented (as text?)
+    backSide JSON NOT NULL,
     FOREIGN KEY(template_id) REFERENCES template(id)
+);
+
+CREATE TABLE IF NOT EXISTS card (
+    id INTEGER PRIMARY KEY,
+    card_type_id INTEGER NOT NULL,
+    carton_id INTEGER NOT NULL,
+    deck_id INTEGER NOT NULL,
+    FOREIGN KEY(card_type_id) REFERENCES card_type(id),
+    FOREIGN KEY(carton_id) REFERENCES carton(id),
+    FOREIGN KEY(deck_id) REFERENCES deck(id)
 );
 
 CREATE TABLE IF NOT EXISTS tracker (
     id INTEGER PRIMARY KEY,
     student_id INTEGER NOT NULL,
-    course_id INTEGER NOT NULL,
+    card_id INTEGER NOT NULL,
     carton_id INTEGER NOT NULL,
     card_type_id INTEGER NOT NULL,
+    deck_id INTEGER NOT NULL,
     FOREIGN KEY(student_id) REFERENCES student(id),
-    FOREIGN KEY(course_id) REFERENCES course(id),
+    FOREIGN KEY(card_id) REFERENCES card(id),
     FOREIGN KEY(carton_id) REFERENCES carton(id),
-    FOREIGN KEY(card_type_id) REFERENCES card_type(id)
+    FOREIGN KEY(card_type_id) REFERENCES card_type(id),
+    FOREIGN KEY(deck_id) REFERENCES deck(id)
 );
 
