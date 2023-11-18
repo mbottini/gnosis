@@ -94,6 +94,12 @@ CREATE TABLE IF NOT EXISTS tracker (
     carton_id INTEGER NOT NULL,
     card_type_id INTEGER NOT NULL,
     deck_id INTEGER NOT NULL,
+    --Some other keys to un-comment in the future. Cf. https://github.com/ankidroid/Anki-Android/wiki/Database-Structure for what Anki does, though not everything Anki does will be included here
+    
+    --timeCreated_id INTEGER NOT NULL, --in Anki this is the epoch in milliseconds; is the 2038 problem resolved in this sort of thing by now?
+    --timeDue_id INTEGER NOT NULL,
+    --interval_id INTEGER NOT NULL, --Probably milliseconds, but rounded to the nearest day (?)
+    --queue_id INTEGER NOT NULL, --e.g. 'new', 'learning', 'review', 'buried', 'suspended', we can do this later
     FOREIGN KEY(student_id) REFERENCES student(id),
     FOREIGN KEY(card_id) REFERENCES card(id),
     FOREIGN KEY(carton_id) REFERENCES carton(id),
