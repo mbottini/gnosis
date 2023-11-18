@@ -1,3 +1,5 @@
+--This is only here as a cheat sheet for the sort of stuff that will need to go in models.py
+
 CREATE TABLE IF NOT EXISTS school_admin (
     id INTEGER PRIMARY KEY,
     username TEXT NOT NULL,
@@ -47,7 +49,8 @@ CREATE TABLE IF NOT EXISTS deck (
 );
 
 CREATE TABLE IF NOT EXISTS template (
-    id INTEGER PRIMARY KEY
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL
 );
 
 --A topos is a field within a template. It is filled with a 'doton' (usually text, maybe an image). A set of filled-in topoi get shipped off to a carton upon pressing enter in the card maker
