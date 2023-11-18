@@ -59,6 +59,7 @@ CREATE TABLE IF NOT EXISTS topos (
     FOREIGN KEY(template_id) REFERENCES template(id)
 );
 
+--A collection of dota that are used to fill in topoi
 CREATE TABLE IF NOT EXISTS carton (
     id INTEGER PRIMARY KEY,
     template_id INTEGER NOT NULL,
