@@ -101,3 +101,20 @@ CREATE TABLE IF NOT EXISTS tracker (
     FOREIGN KEY(deck_id) REFERENCES deck(id)
 );
 
+--Here is an example of how this works in practice: 
+
+--Suppose we have a template for Mandarin vocab that has three topoi under it: a character (e.g. 雨), a pronunciation in Pinyin (yǔ), and an English gloss ('rain').
+
+--This template is for Mr. Smith's Mandarin 1 Class, which has 20 students in it. When Mr. Smith fills in the topoi and presses enter, a carton is created with the three topoi filled in.
+
+--The template also defines three card types, as follows:
+--a) given the Chinese character(s), what is its pronunciation?
+--b) given the Chinese character(s), what is the English meaning?
+--c) given the English gloss, what is the Chinese word, both pronunciation and characters?
+
+--When Mr. Smith presses enter, a card is created for each student in the class for each card type. So if there are 20 students in the class, pressing enter on ('雨', 'yǔ', 'rain') produces 3 *cards* in the card table, but 60 *trackers*: Johnny has a tracker for each of ('pronunciation of 雨' -> 'yǔ'), ('雨' -> 'rain'), ('rain' -> '雨/yǔ'). So does Sally. So does Billy...
+
+--Each tracker looks like:
+--*unique trackerID | billyID | ID of the carton  {'char':'雨', 'pinyin':'yǔ', 'gloss':'rain'} | ID of the 'Chinese -> English' card type | [scheduling stuff goes here]. *
+
+--We can also see here that sooner or later we want the ability to put extra stuff into a card type that surrounds the dota, probably in HTML. E.g. 'pronunciation of 雨' and '(meaning of) 雨' take the same *field* on the front but are not the same card.
