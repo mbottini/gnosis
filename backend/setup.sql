@@ -50,6 +50,7 @@ CREATE TABLE IF NOT EXISTS template (
     id INTEGER PRIMARY KEY
 );
 
+--A topos is a field within a template. It is filled with a 'doton' (usually text, maybe an image). A set of filled-in topoi get shipped off to a carton upon pressing enter in the card maker
 CREATE TABLE IF NOT EXISTS topos (
     id INTEGER PRIMARY KEY,
     topos_name TEXT NOT NULL,
