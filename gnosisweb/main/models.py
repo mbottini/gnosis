@@ -1,4 +1,7 @@
+import datetime
+
 from django.db import models
+from django.utils import timezone
 
 class SchoolAdmin(models.Model):
     username = models.CharField(max_length=50)
@@ -48,6 +51,7 @@ class Deck(models.Model):
     def __str__(self):
         return self.name
 
+#Do we need to rename this given that Django is going to use the term 'template' to refer to webpage stuff?
 class Template(models.Model):
     name = models.CharField(max_length=50)
 
@@ -86,8 +90,6 @@ class Card(models.Model):
     deck = models.ForeignKey(Deck, on_delete=models.CASCADE)
     cardType = models.ForeignKey(CardType, on_delete=models.CASCADE)
     carton = models.ForeignKey(Carton, on_delete=models.CASCADE)
-
-
 
 class Tracker(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
