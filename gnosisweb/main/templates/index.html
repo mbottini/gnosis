@@ -13,6 +13,7 @@
   <form>
     <label for="options">Select an option:</label>
     <select id="options" name="options">
+          <option value="blank"></option>
         {% for template in all_templates %}
             <option value="{{ template.name}}">{{ template.name }}</option>
         {% endfor %}
