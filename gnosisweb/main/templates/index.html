@@ -1,0 +1,22 @@
+
+{% block content %}
+  <h1>Gnosis</h1>
+  <p>
+    Welcome to Gnosis, a website developed to learn!
+  </p>
+  <h2>Dynamic content</h2>
+  <p>The library has the following record counts:</p>
+  <ul>
+    <li><strong>Templates:</strong> {{ num_template }}</li>
+  </ul>
+
+  <form>
+    <label for="options">Select an option:</label>
+    <select id="options" name="options">
+        {% for option in options %}
+            <option value="{{ option.id }}">{{ option.option_text }}</option>
+        {% endfor %}
+    </select>
+</form>
+
+{% endblock %}
