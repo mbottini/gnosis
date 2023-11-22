@@ -13,8 +13,8 @@
   <form>
     <label for="options">Select an option:</label>
     <select id="options" name="options">
-        {% for option in options %}
-            <option value="{{ option.id }}">{{ option.option_text }}</option>
+        {% for template in all_templates %}
+            <option value="{{ template.name}}">{{ template.name }}</option>
         {% endfor %}
     </select>
 </form>

@@ -13,6 +13,7 @@ def index(request):
 
     context = {
         'num_template': num_template,
+        'all_templates': all_templates
     }
 
     # Render the HTML template index.html with the data in the context variable
