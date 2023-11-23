@@ -14,12 +14,30 @@
 <form>
   <!-- does this need to be its own app? --> 
 
-  <button id="existing-template-button">Use an Existing Template</button> 
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#existingTemplateModal" id="existing-template-button">Use an Existing Template</button> 
   
   <button id="new-template-button">Create a New Template</button>
+
+  <div class="modal fade" id="existingTemplateModal" tabindex = "-1" role="dialog" aria-labelledby="existingTemplateModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="existingTemplateModalLabel">Choose a Template</h5>
+        </div>
+        
+        <div class="modal-body">
+        </div>
+          
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </form>
 
 {% load static %}
-<script src="{% static 'main/index.js' %}"></script>
+<script src="{% static 'main/cardcreation.js' %}"></script>
 
 {% endblock %}
