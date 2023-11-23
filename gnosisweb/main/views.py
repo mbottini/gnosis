@@ -10,10 +10,15 @@ def index(request):
 
     all_templates = Template.objects.all()
 
+    def getTopoi(whichTemplate):
+        return Topos.objects.filter(template = whichTemplate)
+
+    myTemplate = request.POST.get("templateOptions")
 
     context = {
         'num_template': num_template,
-        'all_templates': all_templates
+        'all_templates': all_templates,
+        'topoi': getTopoi(myTemplate)
     }
 
     # Render the HTML template index.html with the data in the context variable

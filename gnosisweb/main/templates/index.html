@@ -34,17 +34,20 @@
           
           <div class="modal-body">
             <form id="toposAdditionForm">
-              <select id="templateSelector" for="options" name="options">
+              <select id="templateSelector" for="options" name="templateOptions">
                 <option value="blank"></option>
                 {% for template in all_templates %}
                   <option value="{{ template.id }}">{{ template.name }}</option>
                 {% endfor %}
               </select>
+            </form>
+            <form>
               <div id="inputTopoi">
-                {% for topos in all_topoi %}
-                  <input type="text" name="topoi" value="{{ topos.name }}">{{ topos.name }}</input>
+                {% for topos in topoi %}
+                  <input type="text" value="{{ topos.name }}">{{ topos.name }}</input>
                 {% endfor %}
               </div>
+            </form>
               
             </form>
           </div>
