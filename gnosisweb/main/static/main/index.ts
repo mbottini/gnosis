@@ -19,3 +19,39 @@ if (makeNewTemplate && existingTemplate) {
 $('#existingTemplateModal').on('shown.bs.modal', function () {
     $('#myInput').trigger('focus')
   })
+
+
+const templateSelector = document.getElementById("templateSelector");
+const toposForm = document.getElementById("toposAdditionForm");
+
+if (templateSelector) {
+    templateSelector.addEventListener("change", () => {
+        const templateSelector = document.getElementById("templateSelector") as HTMLSelectElement;
+        const template = templateSelector.value;
+        const templateList = document.getElementById("templateList");
+        if (templateList) {
+            const templateItem = document.createElement("li");
+            templateItem.innerHTML = template;
+            templateList.appendChild(templateItem);
+        }
+    });
+
+}
+
+
+if (toposForm) {
+    toposForm.addEventListener("submit", () => {
+        const toposInput = document.getElementById("toposInput") as HTMLInputElement;
+        const topos = toposInput.value;
+        const toposList = document.getElementById("toposList");
+        if (toposList) {
+            const toposItem = document.createElement("li");
+            toposItem.innerHTML = topos;
+            toposList.appendChild(toposItem);
+        }
+    });
+}
+
+$('#newTemplateModal').on('shown.bs.modal', function () {
+    $('#myInput').trigger('focus')
+  })

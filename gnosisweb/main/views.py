@@ -35,3 +35,8 @@ def makeCarton(request):
 
     # Render the HTML template index.html with the data in the context variable
     return render(request, 'makeCarton.html', context=context)
+
+from django.views import generic
+
+class TemplateListView(generic.ListView):
+    model = Template

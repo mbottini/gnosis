@@ -23,7 +23,6 @@ option {
 
 #new-template-button {
     float: right;
-    margin: 200px 150px;
     display: block;
     background-color: blue;
     color: white;
@@ -41,7 +40,6 @@ option {
 /* Existing template button */
 #existing-template-button {
     float: left;
-    margin: 200px 150px;
     display: block;
     background-color: #fffdd0;
     color: black;
