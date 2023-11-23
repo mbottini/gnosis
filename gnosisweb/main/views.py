@@ -1,24 +1,19 @@
 from django.http import HttpResponse as response
 from django.shortcuts import render
-from .models import Template, Topos, School, SchoolAdmin, Student, Teacher, Course, Deck
+
+from .models import Template, Topos, School, SchoolAdmin, Student, Teacher, Course, Deck, TemplateForm, Carton, CartonForm
 
 def index(request):
     """View function for home page of site."""
 
     # Generate counts of some of the main objects
     num_template = Template.objects.all().count()
-
     all_templates = Template.objects.all()
 
-    def getTopoi(whichTemplate):
-        return Topos.objects.filter(template = whichTemplate)
-
-    myTemplate = request.POST.get("templateOptions")
 
     context = {
         'num_template': num_template,
-        'all_templates': all_templates,
-        'topoi': getTopoi(myTemplate)
+        'all_templates': all_templates
     }
 
     # Render the HTML template index.html with the data in the context variable

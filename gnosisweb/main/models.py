@@ -1,6 +1,8 @@
 import datetime
 
 from django.db import models
+from django.forms import ModelForm
+
 from django.utils import timezone
 
 class SchoolAdmin(models.Model):
@@ -57,6 +59,11 @@ class Template(models.Model):
 
     def __str__(self):
         return self.name
+    
+class TemplateForm(ModelForm):
+    class Meta:
+        model = Template
+        fields = "__all__"
 
 class Topos(models.Model):
     name = models.CharField(max_length=50)
@@ -64,16 +71,20 @@ class Topos(models.Model):
     template = models.ForeignKey(Template, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.name
+        return self.name 
 
 class Carton(models.Model):
     name = models.CharField(max_length=50) # This is going to need to be something else, probably the doton in a 'main' topos
-    topoi = models.ManyToManyField(Topos) # I assume this is correct, but does it need to be a foreign key?
+    dota = models.ManyToManyField(Topos) # I assume this is correct, but does it need to be a foreign key?
     template = models.ForeignKey(Template, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
 
+class CartonForm(ModelForm):
+    class Meta:
+        model = Carton
+        fields = ["dota"]
 
 
 # Again I would like a snappy one-word name for card type
