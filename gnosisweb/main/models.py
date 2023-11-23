@@ -94,6 +94,8 @@ class Card(models.Model):
 class Tracker(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     # Either specified as a combo of a carton and a card type, or as a single card. I am inclined to the former
+
+    #We maybe put regex stuff here, maybe also in Card and Deck (?)
     carton = models.ForeignKey(Carton, on_delete=models.CASCADE)
     cardType = models.ForeignKey(CardType, on_delete=models.CASCADE)
 
