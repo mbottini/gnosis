@@ -3,23 +3,23 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'main/styles.css' %}">
 
-  <h1>Gnosis</h1>
-  <p> Welcome to Gnosis, a website developed to learn! </p>
-  <h2>Dynamic content</h2>
-  <p>The library has the following record counts:</p>
-  <ul>
-    <li><strong>Templates:</strong> {{ num_template }}</li>
-  </ul>
+<h1>Gnosis</h1>
+<p> Welcome to Gnosis, a website developed to learn! </p>
+<h2>Dynamic content</h2>
+<p>The library has the following record counts:</p>
+<ul>
+  <li><strong>Templates:</strong> {{ num_template }}</li>
+</ul>
 
-  <form>
-    <label for="options">Select an option:</label>
-    <select id="options" name="options">
-      <option value="blank"></option>
-      {% for template in all_templates %}
-        <option value="{{ template.name}}">{{ template.name }}</option>
-      {% endfor %}
-    </select>
-  </form>
+<form>
+  <!-- does this need to be its own app? --> 
 
+  <button id="existing-template-button">Use an Existing Template</button> 
+  
+  <button id="new-template-button">Create a New Template</button>
+</form>
+
+{ % load static %}
+<script src="{% static 'main/index.js' %}"></script>
 
 {% endblock %}
