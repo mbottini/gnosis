@@ -1,8 +1,10 @@
 {% block content %}
+
+{% load static %}
+<link rel="stylesheet" href="{% static 'main/styles.css' %}">
+
   <h1>Gnosis</h1>
-  <p>
-    Welcome to Gnosis, a website developed to learn!
-  </p>
+  <p> Welcome to Gnosis, a website developed to learn! </p>
   <h2>Dynamic content</h2>
   <p>The library has the following record counts:</p>
   <ul>
@@ -12,11 +14,12 @@
   <form>
     <label for="options">Select an option:</label>
     <select id="options" name="options">
-          <option value="blank"></option>
-        {% for template in all_templates %}
-          <option value="{{ template.name}}">{{ template.name }}</option>
-        {% endfor %}
+      <option value="blank"></option>
+      {% for template in all_templates %}
+        <option value="{{ template.name}}">{{ template.name }}</option>
+      {% endfor %}
     </select>
-</form>
+  </form>
+
 
 {% endblock %}

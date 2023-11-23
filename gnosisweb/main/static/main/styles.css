@@ -1,0 +1,15 @@
+@font-face {
+    font-family: 'Jost';
+    src: url('./font/Jost-400-Book.ttf') format('truetype');
+}
+
+body {
+    font-family: 'Jost', sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #333;
+    background-color: #fff;
+    margin: 0;
+    padding: 0;
+}
+
