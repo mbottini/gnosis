@@ -16,13 +16,15 @@ if (makeNewTemplate && existingTemplate) {
 
 //All valid JS is also valid TS
 
+import "bootstrap";
+
+
 $('#existingTemplateModal').on('shown.bs.modal', function () {
     $('#myInput').trigger('focus')
   })
 
 
 const templateSelector = document.getElementById("templateSelector");
-const toposForm = document.getElementById("toposAdditionForm");
 
 if (templateSelector) {
     templateSelector.addEventListener("change", () => {
@@ -35,21 +37,15 @@ if (templateSelector) {
             templateList.appendChild(templateItem);
         }
     });
-
 }
 
-
+const toposForm = document.getElementById("inputTopoi");
 if (toposForm) {
-    toposForm.addEventListener("submit", () => {
-        const toposInput = document.getElementById("toposInput") as HTMLInputElement;
-        const topos = toposInput.value;
-        const toposList = document.getElementById("toposList");
-        if (toposList) {
-            const toposItem = document.createElement("li");
-            toposItem.innerHTML = topos;
-            toposList.appendChild(toposItem);
-        }
-    });
+    const toposInput = document.getElementById("inputTopoi") as HTMLInputElement;
+    const topos = toposInput.value;
+    const toposItem = document.createElement("li");
+    toposItem.innerHTML = topos;
+    toposInput.appendChild(toposItem);
 }
 
 $('#newTemplateModal').on('shown.bs.modal', function () {
