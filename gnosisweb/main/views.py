@@ -1,7 +1,7 @@
 from django.http import HttpResponse as response
 from django.shortcuts import render
 
-from .models import Template, Topos, School, SchoolAdmin, Student, Teacher, Course, Deck, TemplateForm, Carton, CartonForm
+from .models import Template, Topos, School, SchoolAdmin, Student, Teacher, Course, Deck, TemplateForm, Carton
 
 def index(request):
     """View function for home page of site."""
@@ -10,10 +10,13 @@ def index(request):
     num_template = Template.objects.all().count()
     all_templates = Template.objects.all()
 
+    myTemplate = request.POST.get('templateOptions')
+    all_topoi = Topos.objects.filter(template= myTemplate)
 
     context = {
         'num_template': num_template,
-        'all_templates': all_templates
+        'all_templates': all_templates,
+        'all_topoi': all_topoi
     }
 
     # Render the HTML template index.html with the data in the context variable

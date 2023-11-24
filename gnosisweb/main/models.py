@@ -5,6 +5,8 @@ from django.forms import ModelForm
 
 from django.utils import timezone
 
+from crispy_forms.helper import FormHelper
+
 class SchoolAdmin(models.Model):
     username = models.CharField(max_length=50)
     password = models.CharField(max_length=50) #Make sure this gets hashed, salted, etc. later
@@ -80,11 +82,6 @@ class Carton(models.Model):
 
     def __str__(self):
         return self.name
-
-class CartonForm(ModelForm):
-    class Meta:
-        model = Carton
-        fields = ["dota"]
 
 
 # Again I would like a snappy one-word name for card type
