@@ -10,17 +10,24 @@ def index(request):
     num_template = Template.objects.all().count()
     all_templates = Template.objects.all()
 
-    myTemplate = request.POST.get('templateOptions')
-    all_topoi = Topos.objects.filter(template= myTemplate)
+    
 
     context = {
         'num_template': num_template,
-        'all_templates': all_templates,
-        'all_topoi': all_topoi
+        'all_templates': all_templates
     }
 
     # Render the HTML template index.html with the data in the context variable
     return render(request, 'index.html', context=context)
+
+def getTopoi(request):
+    myTemplate = request.POST.get('templateOptions')
+    all_topoi = Topos.objects.filter(template= myTemplate)
+
+    context = {
+        'all_topoi': all_topoi
+    }
+    return render(request, 'getTopoi.html', context=context)
 
 def makeCarton(request):
     """View function for makeCarton page of site."""

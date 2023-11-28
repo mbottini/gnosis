@@ -43,7 +43,7 @@
               </select>
             </form>
 
-            <form id="makeCartonForm" action="{% url 'index' %}" method="post">
+            <form id="makeCartonForm" action="{% getTopoi % }" method="post">
               {% for topos in all_topoi %}
                 <input type="text" name="topoi" value="{{ topos.name }}">{{ topos.name }}</input>
               {% endfor %}
