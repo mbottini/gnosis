@@ -57,14 +57,27 @@ from django.utils import timezone
 class FactSet(models.Model):
     
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=50, default=str(id))
     facts = models.JSONField()
+
+    nameKey = models.CharField(max_length=50, default="Target")
+
+    @property
+    def name(self):
+        return self.facts[self.nameKey]
+    
+    
+    
     templates = models.ManyToManyField("Template", through='Carton')
 
+    @property
+    def all_templates(self):
+        return self.templates.all()  
+
     def __str__(self):
-        return f"FactSet {self.id}"
+        return f"FactSet {self.name}"
 
 class Template(models.Model):
+    name = models.CharField(max_length=50, default="Template")
     front = models.TextField()
     back = models.TextField()
 
@@ -85,4 +98,4 @@ class Carton(models.Model):
         print("****")
 
     def __str__(self):
-        return f"Carton {self.id} (FactSet {self.fact_set.id} - Template {self.template.id})"
+        return f"Carton {self.id} (FactSet {self.fact_set.name} - Template {self.template.id})"
