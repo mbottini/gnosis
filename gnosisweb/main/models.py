@@ -54,6 +54,7 @@ from django.utils import timezone
 #     def __str__(self):
 #         return self.name
 
+
 class FactSet(models.Model):
     
     id = models.AutoField(primary_key=True)
@@ -64,8 +65,6 @@ class FactSet(models.Model):
     @property
     def name(self):
         return self.facts[self.nameKey]
-    
-    
     
     templates = models.ManyToManyField("Template", through='Carton')
 
@@ -83,6 +82,25 @@ class Template(models.Model):
 
     def __str__(self):
         return f"Template {self.id}"
+    
+
+class FieldCollection(models.Model):
+    id = models.AutoField(primary_key=True)
+
+    #Probably we should have this as "header" (='headword/name') followed by "1":, "2":, etc. for every field, or "0" is just the top field, so that we can order the fields. alternatively we just have "field names":[array of field names]. (OTOH, we may want some other system once we want users to be able to restrict the data type in a field)
+    allTemplateFields = models.JSONField()
+    templates = models.ManyToManyField("Template")
+
+    @property
+    def all_template_fields(self):
+        return self.allTemplateFields.all() #All fields in this field collection. Is this the best way to do this?
+
+    @property
+    def all_templates(self):
+        return self.templates.all() #All templates that use this field collection
+    
+    def __str__(self):
+        return f"FieldCollection {self.id}"
 
 class Carton(models.Model):
     fact_set = models.ForeignKey(FactSet, on_delete=models.CASCADE)
