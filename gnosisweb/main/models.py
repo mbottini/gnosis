@@ -80,7 +80,9 @@ class FieldCollection(models.Model):
     id = models.AutoField(primary_key=True)
 
     #Probably we should have this as "header" (='headword/name') followed by "1":, "2":, etc. for every field, or "0" is just the top field, so that we can order the fields. alternatively we just have "field names":[array of field names]. (OTOH, we may want some other system once we want users to be able to restrict the data type in a field)
-    allTemplateFields = models.JSONField()
+    
+    
+    #allTemplateFields = models.JSONField()
 
     #We also want to be able to get all the templates spawned by this field collection but, given that field_collection is a foreign key for template, the terminal pops up an ordering error if I try to make migrations
 
@@ -94,7 +96,7 @@ class Template(models.Model):
     front = models.TextField()
     back = models.TextField()
 
-    field_collection = models.ForeignKey("FieldCollection", on_delete=models.CASCADE)
+    #field_collection = models.ForeignKey("FieldCollection", on_delete=models.CASCADE)
 
     def __str__(self):
         return f"Template {self.id}"
