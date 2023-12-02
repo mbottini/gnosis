@@ -89,7 +89,7 @@ class FieldCollection(models.Model):
 
     #Probably we should have this as "header" (='headword/name') followed by "1":, "2":, etc. for every field, or "0" is just the top field, so that we can order the fields. alternatively we just have "field names":[array of field names]. (OTOH, we may want some other system once we want users to be able to restrict the data type in a field)
     allTemplateFields = models.JSONField()
-    templates = models.ManyToManyField("Template")
+    templates = models.OneToManyField("Template") 
 
     @property
     def all_template_fields(self):
