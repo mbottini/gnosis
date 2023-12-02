@@ -55,6 +55,9 @@ from django.utils import timezone
 #         return self.name
 
 class FactSet(models.Model):
+    
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=50, default=str(id))
     facts = models.JSONField()
     templates = models.ManyToManyField("Template", through='Carton')
 
