@@ -74,16 +74,6 @@ class FactSet(models.Model):
 
     def __str__(self):
         return f"FactSet {self.name}"
-
-class Template(models.Model):
-    name = models.CharField(max_length=50, default="Template")
-    front = models.TextField()
-    back = models.TextField()
-
-    field_collection = models.ForeignKey("FieldCollection", on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f"Template {self.id}"
     
 
 class FieldCollection(models.Model):
@@ -92,18 +82,22 @@ class FieldCollection(models.Model):
     #Probably we should have this as "header" (='headword/name') followed by "1":, "2":, etc. for every field, or "0" is just the top field, so that we can order the fields. alternatively we just have "field names":[array of field names]. (OTOH, we may want some other system once we want users to be able to restrict the data type in a field)
     allTemplateFields = models.JSONField()
 
-    collectionTemplates = Template.objects.filter(field_collection = id)
+    #We also want to be able to get all the templates spawned by this field collection but, given that field_collection is a foreign key for template, the terminal pops up an ordering error if I try to make migrations
 
-    @property
-    def all_template_fields(self):
-        return self.allTemplateFields.all() #All fields in this field collection. Is this the best way to do this?
 
-    @property
-    def all_templates(self):
-        return self.collectionTemplates.all() #All templates that use this field collection
-    
     def __str__(self):
         return f"FieldCollection {self.id}"
+    
+class Template(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=50, default="Template")
+    front = models.TextField()
+    back = models.TextField()
+
+    field_collection = models.ForeignKey("FieldCollection", on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"Template {self.id}"
 
 class Carton(models.Model):
     fact_set = models.ForeignKey(FactSet, on_delete=models.CASCADE)
