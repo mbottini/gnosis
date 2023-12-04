@@ -4,6 +4,7 @@ from django.db import models
 from django.forms import ModelForm
 
 from django.utils import timezone
+from django_jsonform.models.fields import JSONField
 
 
 # class SchoolAdmin(models.Model):
@@ -54,44 +55,48 @@ from django.utils import timezone
 #     def __str__(self):
 #         return self.name
 
+def get_factset_schema(schema=None):
+    if not schema:
+        return {
+            'type': 'dict',
+            'keys': {},
+            'additionalProperties': { 'type': 'string' },
+        }
+    return schema.get_schema()
 
 class FactSet(models.Model):
-    
-    id = models.AutoField(primary_key=True)
-    facts = models.JSONField()
+    facts = JSONField(schema=get_factset_schema)
+    name = models.CharField(max_length=50, blank=True)
 
-    nameKey = models.CharField(max_length=50, default="Target")
-
-    @property
-    def name(self):
-        return self.facts[self.nameKey]
-    
     templates = models.ManyToManyField("Template", through='Carton')
-
-    @property
-    def all_templates(self):
-        return self.templates.all()  
+    schema = models.ForeignKey("FactSetSchema", on_delete=models.CASCADE)
 
     def __str__(self):
         return f"FactSet {self.name}"
-    
 
-class FieldCollection(models.Model):
-    id = models.AutoField(primary_key=True)
+class FactSetSchema(models.Model):
+    ITEMS_SCHEMA = {
+        'type': 'array',
+        'items': {
+            'type': 'string'
+        }
+    }
+    schema = JSONField(schema=ITEMS_SCHEMA)
+    name = models.CharField(max_length=50)
 
-    #Probably we should have this as "header" (='headword/name') followed by "1":, "2":, etc. for every field, or "0" is just the top field, so that we can order the fields. alternatively we just have "field names":[array of field names]. (OTOH, we may want some other system once we want users to be able to restrict the data type in a field)
-    
-    
-    #allTemplateFields = models.JSONField()
-
-    #We also want to be able to get all the templates spawned by this field collection but, given that field_collection is a foreign key for template, the terminal pops up an ordering error if I try to make migrations
-
+    def get_schema(self):
+        schema = {'type':'dict',
+                  'keys':{},
+                  'additionalProperties': { 'type': 'string' },
+                  }
+        for field in self.schema:
+            schema['keys'][field] = {'type':'string'}
+        return schema
 
     def __str__(self):
         return f"FieldCollection {self.id}"
-    
+
 class Template(models.Model):
-    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=50, default="Template")
     front = models.TextField()
     back = models.TextField()
