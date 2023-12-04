@@ -2,6 +2,7 @@ import datetime
 
 from django.db import models
 from django.forms import ModelForm
+from django.core.exceptions import ObjectDoesNotExist
 
 from django.utils import timezone
 from django_jsonform.models.fields import JSONField
@@ -55,14 +56,16 @@ from django_jsonform.models.fields import JSONField
 #     def __str__(self):
 #         return self.name
 
-def get_factset_schema(schema=None):
-    if not schema:
+def get_factset_schema(instance=None):
+    try:
+        return instance.schema.get_schema()
+    except (ObjectDoesNotExist, AttributeError): #attr error for instance=None
         return {
             'type': 'dict',
             'keys': {},
             'additionalProperties': { 'type': 'string' },
         }
-    return schema.get_schema()
+
 
 class FactSet(models.Model):
     facts = JSONField(schema=get_factset_schema)
@@ -85,10 +88,11 @@ class FactSetSchema(models.Model):
     name = models.CharField(max_length=50)
 
     def get_schema(self):
-        schema = {'type':'dict',
-                  'keys':{},
-                  'additionalProperties': { 'type': 'string' },
-                  }
+        schema = {
+            'type': 'dict',
+            'keys': {},
+            'additionalProperties': { 'type': 'string' },
+        }
         for field in self.schema:
             schema['keys'][field] = {'type':'string'}
         return schema

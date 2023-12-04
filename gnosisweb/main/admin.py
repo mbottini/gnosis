@@ -16,8 +16,8 @@ class FactSetForm(ModelForm):
         super().__init__(*args, **kwargs)
         # manually set the current instance on the widget, to support dynamic schema
         try:
-            pass
-            #self.fields['facts'].widget.schema = self.instance.schema
+            #self.fields['facts'].widget.instance = None
+            self.fields['facts'].widget.instance = self.instance
         except:
             pass
 
