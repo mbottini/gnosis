@@ -1,34 +1,66 @@
 from django.contrib import admin
 from .models import FactSet, Template, Carton, FactSetSchema
 from django.forms import ModelForm
+from django.forms.models import BaseInlineFormSet
+
+from django.template import Template as DjTemplate, Context
 
 #admin.site.register(FactSet)
 #admin.site.register(Template)
 #admin.site.register(Carton)
 
 
+class FactSetInlineFormset(BaseInlineFormSet):
+    def __init__(self, *args, **kwargs):
+        self.schema = kwargs['instance']
+        super().__init__(*args, **kwargs)
+
+    def get_form_kwargs(self, *args, **kwargs):
+        kw = super().get_form_kwargs(*args, **kwargs)
+        kw['schema'] = self.schema
+        return kw
 
 class FactSetForm(ModelForm):
     """ Support for dynamic schemas in django-jsonform requires passing the instance in
     post init
     """
     def __init__(self, *args, **kwargs):
+        self.schema = kwargs.pop('schema', None)
         super().__init__(*args, **kwargs)
         # manually set the current instance on the widget, to support dynamic schema
-        try:
-            #self.fields['facts'].widget.instance = None
-            self.fields['facts'].widget.instance = self.instance
-        except:
-            pass
+        if not self.instance.id and self.schema:
+            self.instance.schema = self.schema
+        self.fields['facts'].widget.instance = self.instance
+
+
+
 
 class FactSetInline(admin.StackedInline):
     model = FactSet
     form = FactSetForm
+    formset = FactSetInlineFormset
+
     extra = 0
 
 
-class CartonInline(admin.StackedInline):
+
+
+class CartonMixin:
+    def render_side(self, obj, side):
+        t = DjTemplate(getattr(obj.template, side))
+        rendered_content = t.render(Context(obj.fact_set.facts))
+        return rendered_content
+
+    def render_front(self, obj):
+        return self.render_side(obj, "front")
+
+    def render_back(self, obj):
+        return self.render_side(obj, "back")
+
+class CartonInline(admin.StackedInline, CartonMixin):
     model = Carton
+    readonly_fields = ('render_front', 'render_back')
+    extra = 0
 
 
 
@@ -56,5 +88,6 @@ class TemplateAdmin(admin.ModelAdmin):
     ]
 
 @admin.register(Carton)
-class CartonAdmin(admin.ModelAdmin):
+class CartonAdmin(admin.ModelAdmin, CartonMixin):
     list_display = ('template', 'fact_set', 'id')
+    readonly_fields = ('render_front', 'render_back')
