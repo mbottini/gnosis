@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'django_extensions',
     'django_jsonform',
+    'django_htmx',
     'main.apps.MainConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -56,6 +57,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_htmx.middleware.HtmxMiddleware',
 ]
 
 ROOT_URLCONF = 'gnosisweb.urls'

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ deck.title }}{% endblock %}
+
+{% block content %}
+    <h1>{{ deck.title }}</h1>
+    <p>{{ deck.description }}</p>
+    {% for card in deck.cards.all %}
+        <div class="card" style="border:black 1px;">
+            {{card.render_front}}
+            <br>------<br>
+            {{card.render_back}}
+        </div>
+    {% endfor %}
+    </ul>
+{% endblock %}

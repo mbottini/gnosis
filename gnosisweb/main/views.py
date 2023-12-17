@@ -1,6 +1,15 @@
 from django.http import HttpResponse as response
 from django.shortcuts import render
 
+from django.views.generic import DetailView
+from .models import Deck
+
+class DeckDetailView(DetailView):
+    model = Deck
+    template_name = 'deck_detail.html'
+    context_object_name = 'deck'
+
+
 #from .models import Template, Topos, School, SchoolAdmin, Student, Teacher, Course, Deck, TemplateForm, Carton
 
 # def index(request):

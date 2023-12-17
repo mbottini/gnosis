@@ -7,6 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 from django_jsonform.models.fields import JSONField
 
+from django.template import Template as DjTemplate, Context
 
 # class SchoolAdmin(models.Model):
 #     username = models.CharField(max_length=50)
@@ -56,6 +57,7 @@ from django_jsonform.models.fields import JSONField
 #     def __str__(self):
 #         return self.name
 
+
 def get_factset_schema(instance=None):
     try:
         return instance.schema.get_schema()
@@ -71,7 +73,7 @@ class FactSet(models.Model):
     facts = JSONField(schema=get_factset_schema)
     name = models.CharField(max_length=50, blank=True)
 
-    templates = models.ManyToManyField("Template", through='Carton')
+    templates = models.ManyToManyField("Template", through='Card')
     schema = models.ForeignKey("FactSetSchema", on_delete=models.CASCADE)
 
     def __str__(self):
@@ -91,37 +93,53 @@ class FactSetSchema(models.Model):
         schema = {
             'type': 'dict',
             'keys': {},
-            'additionalProperties': { 'type': 'string' },
+            'additionalProperties': {'type': 'string'},
         }
         for field in self.schema:
-            schema['keys'][field] = {'type':'string'}
+            schema['keys'][field] = {'type': 'string'}
         return schema
 
     def __str__(self):
         return f"FieldCollection {self.id}"
 
+
 class Template(models.Model):
     name = models.CharField(max_length=50, default="Template")
     front = models.TextField()
     back = models.TextField()
-
-    #field_collection = models.ForeignKey("FieldCollection", on_delete=models.CASCADE)
+    schema = models.ForeignKey(FactSetSchema, on_delete=models.CASCADE)
+    default = models.BooleanField(default=True,) #default create a  card for each factset with this template
 
     def __str__(self):
         return f"Template {self.id}"
 
-class Carton(models.Model):
+
+class Card(models.Model):
     fact_set = models.ForeignKey(FactSet, on_delete=models.CASCADE)
     template = models.ForeignKey(Template, on_delete=models.CASCADE)
 
-    def render(self):
-        from django.template import Context, Template
-        print("****")
-        print("front:")
-        print(Template(self.template.front).render(Context(self.fact_set.facts)))
-        print("back:")
-        print(Template(self.template.back).render(Context(self.fact_set.facts)))
-        print("****")
+    def render_side(self, side):
+        t = DjTemplate(getattr(self.template, side))
+        rendered_content = t.render(Context(self.fact_set.facts))
+        return rendered_content
+
+    def render_front(self):
+        return self.render_side("front")
+
+    def render_back(self):
+        return self.render_side("back")
+
+
 
     def __str__(self):
-        return f"Carton {self.id} (FactSet {self.fact_set.name} - Template {self.template.id})"
+        return f"Card {self.id} (FactSet {self.fact_set.name} - Template {self.template.id})"
+
+
+class Deck(models.Model):
+    cards = models.ManyToManyField(Card)
+    subdecks = models.ManyToManyField('self', symmetrical=False)
+    name = models.CharField(max_length=50)
+    description = models.TextField()
+
+    def __str__(self):
+        return f"Deck {self.name}"

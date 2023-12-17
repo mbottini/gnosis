@@ -8,10 +8,16 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.11"
 django-jsonform = "^2.21.2"
+django-htmx = "^1.17.2"
 
 
 [tool.poetry.group.dev.dependencies]
 ipdb = "^0.13.13"
+python-lsp-server = "^1.9.0"
+ruff = "^0.1.8"
+ruff-lsp = "^0.0.48"
+flake8 = "^6.1.0"
+pylint = "^3.0.3"
 
 [build-system]
 requires = ["poetry-core"]
