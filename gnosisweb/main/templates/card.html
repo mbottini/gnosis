@@ -1,0 +1,9 @@
+<div class="card">
+    <div class="card-front">
+        {{card.render_front}}
+    </div>
+    <div class="card-back">
+        {{card.render_back}}
+    </div>
+    <button hx-swap="outerHTML" hx-post="{% url "track-result" deck_id=deck.id card_id=card.id %}" hx-target="closest .card">I got it!</button>
+</div>

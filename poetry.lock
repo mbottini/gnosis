@@ -170,6 +170,20 @@ files = [
 django = ">=2.0"
 
 [[package]]
+name = "django-model-utils"
+version = "4.3.1"
+description = "Django model mixins and utilities"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "django-model-utils-4.3.1.tar.gz", hash = "sha256:2e2e4f13e4f14613134a9777db7ad4265f59a1d8f1384107bcaa3028fe3c87c1"},
+    {file = "django_model_utils-4.3.1-py3-none-any.whl", hash = "sha256:8c0b0177bab909a8635b602d960daa67e80607aa5469217857271a60726d7a4b"},
+]
+
+[package.dependencies]
+Django = ">=3.2"
+
+[[package]]
 name = "docstring-to-markdown"
 version = "0.13"
 description = "On the fly conversion of Python docstrings to markdown"
@@ -801,4 +815,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "968bbd37f0cc13c6e580f094c76ab60cffc8c0f7b28da4c55cb9a3d8fe415f4b"
+content-hash = "7ef50d9872eced9bdc129e131ac767b44c3678f948b33220e32595877989a66b"

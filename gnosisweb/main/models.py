@@ -8,6 +8,7 @@ from django.utils import timezone
 from django_jsonform.models.fields import JSONField
 
 from django.template import Template as DjTemplate, Context
+from model_utils.models import TimeStampedModel
 
 # class SchoolAdmin(models.Model):
 #     username = models.CharField(max_length=50)
@@ -69,7 +70,7 @@ def get_factset_schema(instance=None):
         }
 
 
-class FactSet(models.Model):
+class FactSet(TimeStampedModel):
     facts = JSONField(schema=get_factset_schema)
     name = models.CharField(max_length=50, blank=True)
 
@@ -79,7 +80,7 @@ class FactSet(models.Model):
     def __str__(self):
         return f"FactSet {self.name}"
 
-class FactSetSchema(models.Model):
+class FactSetSchema(TimeStampedModel):
     ITEMS_SCHEMA = {
         'type': 'array',
         'items': {
@@ -103,7 +104,7 @@ class FactSetSchema(models.Model):
         return f"FieldCollection {self.id}"
 
 
-class Template(models.Model):
+class Template(TimeStampedModel):
     name = models.CharField(max_length=50, default="Template")
     front = models.TextField()
     back = models.TextField()
@@ -114,7 +115,7 @@ class Template(models.Model):
         return f"Template {self.id}"
 
 
-class Card(models.Model):
+class Card(TimeStampedModel):
     fact_set = models.ForeignKey(FactSet, on_delete=models.CASCADE)
     template = models.ForeignKey(Template, on_delete=models.CASCADE)
 
@@ -135,11 +136,28 @@ class Card(models.Model):
         return f"Card {self.id} (FactSet {self.fact_set.name} - Template {self.template.id})"
 
 
-class Deck(models.Model):
+class Deck(TimeStampedModel):
     cards = models.ManyToManyField(Card)
     subdecks = models.ManyToManyField('self', symmetrical=False)
     name = models.CharField(max_length=50)
     description = models.TextField()
 
+    def get_next_card(self):
+        last_card = self.trackers.latest().card
+        try:
+            return Card.objects.filter(id__gt=last_card.id).first()
+        except ObjectDoesNotExist:
+            return None
+
     def __str__(self):
         return f"Deck {self.name}"
+
+class Tracker(TimeStampedModel):
+    card = models.ForeignKey(Card, on_delete=models.CASCADE)
+    deck = models.ForeignKey(Deck, related_name="trackers", on_delete=models.CASCADE)
+    result = models.CharField(max_length=40)
+
+    class Meta:
+        ordering = ["created"]
+        verbose_name_plural = "Trackers"
+        get_latest_by = "created"

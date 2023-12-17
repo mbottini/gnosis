@@ -5,12 +5,5 @@
 {% block content %}
     <h1>{{ deck.title }}</h1>
     <p>{{ deck.description }}</p>
-    {% for card in deck.cards.all %}
-        <div class="card" style="border:black 1px;">
-            {{card.render_front}}
-            <br>------<br>
-            {{card.render_back}}
-        </div>
-    {% endfor %}
-    </ul>
+    <button hx-get="{% url "start-quiz" deck.id %}" hx-swap="outerHTML"> start quiz </button>
 {% endblock %}

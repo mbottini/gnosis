@@ -22,6 +22,7 @@
         {% django_htmx_script %}
     </head>
     <body hx-boost="true"
+          hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
           class="{% block bodyclass %}{% endblock bodyclass %}">
         <div id="app">
             {% block content %}
