@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import FactSet, Template, Card, FactSetSchema
+from .models import FactSet, Template, Card, FactSetSchema, Tracker
 from django.forms import ModelForm
 from django.forms.models import BaseInlineFormSet
 
@@ -84,3 +84,8 @@ class TemplateAdmin(admin.ModelAdmin):
 class CardAdmin(admin.ModelAdmin, CardMixin):
     list_display = ('template', 'fact_set', 'id')
     readonly_fields = ('render_front', 'render_back')
+
+
+@admin.register(Tracker)
+class TrackerAdmin(admin.ModelAdmin):
+    readonly_fields = ('created', 'modified')
