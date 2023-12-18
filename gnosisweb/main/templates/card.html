@@ -16,26 +16,33 @@
             <div x-cloak class="card-back" x-show = "open">
                 {{card.render_back}}
             </div>
-                <div x-cloak x-show = "open">
-                    <button id="Pass" hx-swap="outerHTML" hx-post="{% url 'track-result' deck_id=deck.id card_id=card.id %}" hx-target="closest .card" @click="open = !open">Pass</button>
+                <div id="buttons" x-show = "open">
+                    
+                    <button id="Pass" hx-swap="outerHTML" hx-post="{% url 'track-result' deck_id=deck.id card_id=card.id %}" hx-target="closest .card" @click.stop="open = !open">Pass</button>
+                    
 
-                    <button id="Fail" hx-swap="outerHTML" hx-post="{% url 'track-result' deck_id=deck.id card_id=card.id %}" hx-target="closest .card" @click="open = !open">Fail</button>
+                    <button id="Fail" hx-swap="outerHTML" hx-post="{% url 'track-result' deck_id=deck.id card_id=card.id %}" hx-target="closest .card" @click.stop="open = !open">Fail</button>
                 </div>
+            </div>
         </div>
     </div>
 </body>
 <script>
-    let passButton = document.getElementById("Pass");
-    let failButton = document.getElementById("Fail");
+    
+    var buttonDiv = document.getElementById("buttons");
 
-    document.addEventListener("keyup", function(event) {
-        if (event.key === "1" && passButton) {
-            passButton.click();
-            console.log("1 pressed");
-        }
-        else if (event.key === "2") {
-            failButton.click();
-        }
-    });
+    if (buttonDiv.x-show == "open") {
+        console.log(buttonDiv.x-show)
+        var passButton = document.getElementById("Pass");
+        var failButton = document.getElementById("Fail");
+        document.addEventListener("keyup", function(event) {
+            if (event.key === "1" && passButton && buttonDiv.x-show == "open") {
+                passButton.click();
+            }
+            else if (event.key === "2" && failButton && buttonDiv.x-show == "open") {
+                failButton.click();
+            }
+        });
+    }
 </script>
 </html>
