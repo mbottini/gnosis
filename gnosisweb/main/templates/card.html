@@ -1,9 +1,41 @@
-<div class="card">
-    <div class="card-front">
-        {{card.render_front}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static '../main/styles.css' %}"> <!-- Not working, for some reason -->
+
+    <meta charset="UTF-8">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body>
+    <div x-data="{ open: false }" @click="open = !open" @keyup.enter.window="open = !open" @keyup.spacebar.window="open = !open" @click.stop.outside="open = !open">
+        <div class="card">
+            <div x-cloak class="card-front" x-show = "!open">
+                {{card.render_front}}
+            </div>
+            <div x-cloak class="card-back" x-show = "open">
+                {{card.render_back}}
+            </div>
+            <div x-cloak x-show = "open">
+                <button id="Pass" hx-swap="outerHTML" hx-post="{% url 'track-result' deck_id=deck.id card_id=card.id %}" hx-target="closest .card" @click="open = !open">Pass</button>
+
+                <button id="Fail" hx-swap="outerHTML" hx-post="{% url 'track-result' deck_id=deck.id card_id=card.id %}" hx-target="closest .card" @click="open = !open">Fail</button>
+            </div>
+        </div>
     </div>
-    <div class="card-back">
-        {{card.render_back}}
-    </div>
-    <button hx-swap="outerHTML" hx-post="{% url "track-result" deck_id=deck.id card_id=card.id %}" hx-target="closest .card">I got it!</button>
-</div>
+</body>
+<script>
+    let passButton = document.getElementById("Pass");
+    let failButton = document.getElementById("Fail");
+
+    document.addEventListener("keyup", function(event) {
+        if (event.key === "1" && passButton) {
+            passButton.click();
+            console.log("1 pressed");
+        }
+        else if (event.key === "2") {
+            failButton.click();
+        }
+    });
+</script>
+</html>
