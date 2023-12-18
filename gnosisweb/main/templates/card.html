@@ -1,5 +1,5 @@
-<div class="card" tabindex="0" x-data="{ showFront: true }" @show_answer="showFront=false;$focus.next();" x-trap="true" @keyup.1="$dispatch('pass')" @keyup.2="$dispatch('fail')">
-    <div x-cloak class="card-front" x-show = "showFront">
+<div class="card" tabindex="0" x-data="{ showFront: true }" @show_answer="showFront=false" @keyup.1="$dispatch('pass')" @keyup.2="$dispatch('fail')">
+    <div x-cloak class="card-front" x-show = "showFront" x-trap="showFront">
         {{card.render_front}}
         <div>
             <button @click="$dispatch('show_answer')"
@@ -11,7 +11,7 @@
         </div>
     </div>
 
-    <div x-cloak class="card-back" x-show = "!showFront">
+    <div x-cloak class="card-back" x-show = "!showFront" x-trap="!showFront" >
         {{card.render_back}}
         <div >
             <button id="pass"
