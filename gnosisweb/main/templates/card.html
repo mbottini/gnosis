@@ -16,11 +16,11 @@
             <div x-cloak class="card-back" x-show = "open">
                 {{card.render_back}}
             </div>
-            <div x-cloak x-show = "open">
-                <button id="Pass" hx-swap="outerHTML" hx-post="{% url 'track-result' deck_id=deck.id card_id=card.id %}" hx-target="closest .card" @click="open = !open">Pass</button>
+                <div x-cloak x-show = "open">
+                    <button id="Pass" hx-swap="outerHTML" hx-post="{% url 'track-result' deck_id=deck.id card_id=card.id %}" hx-target="closest .card" @click="open = !open">Pass</button>
 
-                <button id="Fail" hx-swap="outerHTML" hx-post="{% url 'track-result' deck_id=deck.id card_id=card.id %}" hx-target="closest .card" @click="open = !open">Fail</button>
-            </div>
+                    <button id="Fail" hx-swap="outerHTML" hx-post="{% url 'track-result' deck_id=deck.id card_id=card.id %}" hx-target="closest .card" @click="open = !open">Fail</button>
+                </div>
         </div>
     </div>
 </body>
