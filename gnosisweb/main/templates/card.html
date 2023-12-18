@@ -1,48 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    {% load static %}
-    <link rel="stylesheet" href="{% static '../main/styles.css' %}"> <!-- Not working, for some reason -->
-
-    <meta charset="UTF-8">
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-</head>
-<body>
-    <div x-data="{ open: false }" @click="open = !open" @keyup.enter.window="open = !open" @keyup.spacebar.window="open = !open" @click.stop.outside="open = !open">
-        <div class="card">
-            <div x-cloak class="card-front" x-show = "!open">
-                {{card.render_front}}
-            </div>
-            <div x-cloak class="card-back" x-show = "open">
-                {{card.render_back}}
-            </div>
-                <div id="buttons" x-show = "open">
-                    
-                    <button id="Pass" hx-swap="outerHTML" hx-post="{% url 'track-result' deck_id=deck.id card_id=card.id %}" hx-target="closest .card" @click.stop="open = !open">Pass</button>
-                    
-
-                    <button id="Fail" hx-swap="outerHTML" hx-post="{% url 'track-result' deck_id=deck.id card_id=card.id %}" hx-target="closest .card" @click.stop="open = !open">Fail</button>
-                </div>
-            </div>
+<div class="card" tabindex="0" x-data="{ showFront: true }" @show_answer="showFront=false;$focus.next();" x-trap="true" @keyup.1="$dispatch('pass')" @keyup.2="$dispatch('fail')">
+    <div x-cloak class="card-front" x-show = "showFront">
+        {{card.render_front}}
+        <div>
+            <button @click="$dispatch('show_answer')"
+                    x-ref="show_answer"
+                    @keyup.enter="$dispatch('show_answer')"
+                    @keyup.spacebar="$dispatch('show_answer')"
+                    @click.stop.outside="$dispatch('show_answer')" >
+                Show Answer</button>
         </div>
     </div>
-</body>
-<script>
-    
-    var buttonDiv = document.getElementById("buttons");
 
-    if (buttonDiv.x-show == "open") {
-        console.log(buttonDiv.x-show)
-        var passButton = document.getElementById("Pass");
-        var failButton = document.getElementById("Fail");
-        document.addEventListener("keyup", function(event) {
-            if (event.key === "1" && passButton && buttonDiv.x-show == "open") {
-                passButton.click();
-            }
-            else if (event.key === "2" && failButton && buttonDiv.x-show == "open") {
-                failButton.click();
-            }
-        });
-    }
-</script>
-</html>
+    <div x-cloak class="card-back" x-show = "!showFront">
+        {{card.render_back}}
+        <div >
+            <button id="pass"
+                    hx-trigger="pass from:body"
+                    hx-swap="outerHTML"
+                    hx-post="{% url 'track-result' deck_id=deck.id card_id=card.id %}"
+                    hx-target="closest .card"
+                    >
+                Pass</button>
+            <button id="fail"
+                    hx-trigger="fail from:body"
+                    hx-swap="outerHTML"
+                    hx-post="{% url 'track-result' deck_id=deck.id card_id=card.id %}"
+                    hx-target="closest .card"
+            >
+                Fail</button>
+        </div>
+    </div>
+</div>
