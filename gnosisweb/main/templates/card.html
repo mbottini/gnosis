@@ -15,14 +15,14 @@
         {{card.render_back}}
         <div >
             <button id="pass"
-                    hx-trigger="pass from:body"
+                    hx-trigger="pass from:body, click"
                     hx-swap="outerHTML"
                     hx-post="{% url 'track-result' deck_id=deck.id card_id=card.id %}"
                     hx-target="closest .card"
                     >
                 Pass</button>
             <button id="fail"
-                    hx-trigger="fail from:body"
+                    hx-trigger="fail from:body, click"
                     hx-swap="outerHTML"
                     hx-post="{% url 'track-result' deck_id=deck.id card_id=card.id %}"
                     hx-target="closest .card"
