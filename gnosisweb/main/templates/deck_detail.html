@@ -1,9 +1,0 @@
-{% extends 'base.html' %}
-
-{% block title %}{{ deck.title }}{% endblock %}
-
-{% block content %}
-    <h1>{{ deck.title }}</h1>
-    <p>{{ deck.description }}</p>
-    <button hx-get="{% url "start-quiz" deck.id %}" hx-swap="outerHTML"> start quiz </button>
-{% endblock %}

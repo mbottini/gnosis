@@ -1,1 +1,0 @@
-gnosisweb/manage.py
