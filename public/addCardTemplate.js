@@ -1,3 +1,25 @@
+
+class cardTemplate {
+    constructor(name, fields, fieldTypes, fieldSettingDicts, cards, cardHTMLDicts) {
+        this.name = name;
+        this.fields = fields;
+        this.fieldTypes = fieldTypes;
+        this.fieldSettingDicts = fieldSettingDicts;
+        this.cards = cards;
+        this.cardHTMLDicts = cardHTMLDicts;
+    }
+}
+
+function possibleFieldTypes(dropdownElement) {
+    let fieldTypes = ["Text", "Input", "Formatting", "Cloze"];
+    for (let i = 0; i < fieldTypes.length; i++) {
+        let option = document.createElement("option");
+        option.text = fieldTypes[i];
+        option.value = fieldTypes[i];
+        dropdownElement.add(option);
+    }
+}
+
 function createRegexPairing() {
     let replacementDiv = document.createElement("div");
     let englishRegexInput = document.createElement("input");
@@ -20,6 +42,7 @@ function createRegexPairing() {
 function createRegexTable() {
     let popupWindow = window.open("", "", "height=500, width=400");
     popupWindow.document.title = "Add Character Replacement";
+
     let topDiv = document.createElement("div");
 
     for (let i = 0; i < 10; i++) {
@@ -35,20 +58,41 @@ function createRegexTable() {
     });
     popupWindow.document.body.appendChild(addButton);
     popupWindow.document.body.appendChild(topDiv);
+
+
+    let regexDictionary = {};
+
+    let submitButton = document.createElement("button");
+    submitButton.innerHTML = "Create mapping";
+    submitButton.addEventListener("click", function() {
+        for (let i = 0; i < topDiv.children.length; i++) {
+            let englishRegex = topDiv.children[i].children[0].value;
+            let foreignRegex = topDiv.children[i].children[2].value;
+            if (englishRegex !== "" && foreignRegex !== "") {
+                regexDictionary[englishRegex] = foreignRegex;
+            }
+        }
+        console.log(regexDictionary);
+        popupWindow.close();
+    });
+    popupWindow.document.body.appendChild(submitButton);
+    return regexDictionary;
 }
 
-function possibleFieldTypes(dropdownElement) {
-    let fieldTypes = ["Text", "Input", "Formatting", "Cloze"];
-    for (let i = 0; i < fieldTypes.length; i++) {
-        let option = document.createElement("option");
-        option.text = fieldTypes[i];
-        option.value = fieldTypes[i];
-        dropdownElement.add(option);
+function addFormatting() {
+
+}
+
+function showSettingsWindow(setting){
+    if (setting != "Formatting") {
+        createRegexTable();
+    } else {
+        addFormatting();
     }
 }
 
 function createEditorInput(counter, thisDiv, inputBox, cardBox) {
-    inputBox.value += "{field" + counter.toString() + "}\n";
+    inputBox.value += "{f" + counter.toString() + "}\n";
     updateOutputBox(inputBox, cardBox);
 
     let fieldSpan = document.createElement("span");
@@ -68,9 +112,7 @@ function createEditorInput(counter, thisDiv, inputBox, cardBox) {
     
     
     settingsButton.addEventListener("click", function() {
-        if (fieldTypeDropdown.value === "Text") {
-            createRegexTable();
-        }
+        showSettingsWindow(fieldTypeDropdown.value);
     });
     
     thisDiv.appendChild(fieldSpan);
@@ -107,7 +149,7 @@ function createTextInput(cardBox) {
     let textBox = document.createElement("textarea");
     textBox.style.width = "100%";
     textBox.style.height = "80%";
-    textBox.type = "text";
+    //textBox.type = "text";
     textBox.name = "cardName";
     textBox.id = "cardName";
 
@@ -118,23 +160,98 @@ function createTextInput(cardBox) {
     return textBox;
 }
 
-function createTabs(tabDiv) {
+function createCardTabs(tabDiv, counter, activeTab=0) {
+    
+    tabDiv.innerHTML = "";
+    let tabList = [];
+    for (let i = 1; i <= counter; i++) {
+        let tab = document.createElement("button");
+        tab.id = "card-" + i.toString();
+        tab.innerHTML = "Card " + i.toString();
+        tabList.push(tab);
+        tabDiv.appendChild(tab);
+    }
+    tabList[activeTab].style.backgroundColor = "#8888ff";
+
+    let activeTabIndex = 0;
+    for (let j = 0; j < tabList.length; j++) {
+        tabList[j].addEventListener("click", function() {
+            activeTabIndex = j;
+            for (let k = 0; k < tabList.length; k++) {
+                if (k === j) {
+                    tabList[k].style.backgroundColor = "#8888ff";
+                } else {
+                    tabList[k].style.backgroundColor = "#f1f1f1";
+                }
+            }
+        });
+    }
+
+    let plusTab = document.createElement("button");
+    plusTab.innerHTML = "+";
+
+    plusTab.addEventListener("click", function() {
+        counter++;
+        createCardTabs(tabDiv, counter, activeTabIndex);
+    });
+    tabDiv.appendChild(plusTab);
+
+    if (counter > 1) {
+        let minusTab = document.createElement("button");
+        minusTab.innerHTML = "-";
+
+        minusTab.addEventListener("click", function() {
+            counter--;
+            createCardTabs(tabDiv, counter, activeTabIndex);
+        });
+
+        tabDiv.appendChild(minusTab);
+    }
+}
+
+function createFrontBackTabs(tabDiv) {
+    let frontTab = document.createElement("button");
+    frontTab.innerHTML = "Front";
+
+    frontTab.onclick = function() {
+        frontTab.style.backgroundColor = "#66ff66";
+        backTab.style.backgroundColor = "#f1f1f1";
+    }
+
+    let backTab = document.createElement("button");
+    backTab.innerHTML = "Back";
+
+    backTab.onclick = function() {
+        backTab.style.backgroundColor = "#66ff66";
+        frontTab.style.backgroundColor = "#f1f1f1";
+    }
+    frontTab.style.backgroundColor = "#66ff66";
+    tabDiv.appendChild(frontTab);
+    tabDiv.appendChild(backTab);
+}
+
+function addPaddingDiv(inputDiv) {
+    let paddingDiv = document.createElement("div");
+    paddingDiv.style.height = "5px";
+    inputDiv.appendChild(paddingDiv);
 }
 
 function styleInputBox(textBox) {
     let inputDiv = document.createElement("div");
     let topTabs = document.createElement("div");
     topTabs.classList.add("tab");
-    for (let i = 0; i < 3; i++) {
-        let tab = document.createElement("button");
-        tab.classList.add("tablinks");
-        tab.innerHTML = "Card " + i.toString();
-        topTabs.appendChild(tab);
-    }
+    createCardTabs(topTabs, 1);
     inputDiv.appendChild(topTabs);
+    
+    addPaddingDiv(inputDiv);
 
-    let breakLine = document.createElement("br");
-    inputDiv.appendChild(breakLine);
+    let frontBackTabs = document.createElement("div");
+    frontBackTabs.classList.add("tab");
+    createFrontBackTabs(frontBackTabs);
+    inputDiv.appendChild(frontBackTabs);
+
+    addPaddingDiv(inputDiv);
+    
     inputDiv.appendChild(textBox);
     return inputDiv;
 }
