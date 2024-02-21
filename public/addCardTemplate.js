@@ -19,7 +19,7 @@ function possibleFieldTypes(dropdownElement) {
         dropdownElement.add(option);
     }
 }
-
+//Put all this stuff into a module (and figure out why you can't open new windows when you're using a module)
 function createRegexPairing() {
     let replacementDiv = document.createElement("div");
     let englishRegexInput = document.createElement("input");
@@ -79,8 +79,50 @@ function createRegexTable() {
     return regexDictionary;
 }
 
-function addFormatting() {
+function addFormattingOptions(dropdown) {
+    let formattingTypes = ["Color", "Text style", "Visibility"];
+    for (let i = 0; i < formattingTypes.length; i++) {
+        let option = document.createElement("option");
+        option.text = formattingTypes[i];
+        option.value = formattingTypes[i];
+        dropdown.add(option);
+    }
+}
 
+
+//This applies formatting to some field or other. In the text browser this is done by e.g. {f1:f4} or {f1:f3[f2]}, where [f2] allows us to take an optional parameter. This will require some sort of microlanguage to parse the formatting, and then we can apply it to the field.
+function addFormatting() {
+    let popupWindow = window.open("", "", "height=500, width=400");
+    popupWindow.document.title = "Add Formatting";
+    let allSelectionDivs = document.createElement("div");
+
+    let selectionDiv = document.createElement("div");
+    selectionDiv.style.padding = "5px";
+    let selectionDropdown = document.createElement("select");
+    addFormattingOptions(selectionDropdown);
+    selectionDiv.appendChild(selectionDropdown);
+    
+
+    let additionalFormatting = document.createElement("button");
+    additionalFormatting.innerHTML = "Add another option";
+    additionalFormatting.classList.add("Jost");
+
+    popupWindow.document.body.appendChild(selectionDiv);
+    popupWindow.document.body.appendChild(additionalFormatting);
+
+    //Fix this later
+    additionalFormatting.addEventListener("click", function() {
+        let formattingDiv = document.createElement("div");
+        formattingDiv.style.padding = "5px";
+        let extraFormattingDropdown = document.createElement("select");
+        addFormattingOptions(extraFormattingDropdown);
+        formattingDiv.appendChild(extraFormattingDropdown);
+        
+        allSelectionDivs.appendChild(formattingDiv);
+    });
+
+    
+    
 }
 
 function showSettingsWindow(setting){
@@ -109,6 +151,7 @@ function createEditorInput(counter, thisDiv, inputBox, cardBox) {
     let settingsButton = document.createElement("button");
     settingsButton.display = "inline";
     settingsButton.innerHTML = "Settings";
+    settingsButton.classList.add("Jost");
     
     
     settingsButton.addEventListener("click", function() {
@@ -130,6 +173,8 @@ function createDropdownMenu(topElement, counter, inputBox, cardBox) {
     let nextButton = document.createElement("button");
     topElement.appendChild(thisDropdownArea);
     nextButton.innerHTML = "Add Field";
+    nextButton.classList.add("Jost");
+
     createEditorInput(counter, thisDropdownArea, inputBox, cardBox);
 
     nextButton.addEventListener("click", function() {
@@ -166,12 +211,13 @@ function createCardTabs(tabDiv, counter, activeTab=0) {
     let tabList = [];
     for (let i = 1; i <= counter; i++) {
         let tab = document.createElement("button");
+        tab.classList.add("Jost");
         tab.id = "card-" + i.toString();
         tab.innerHTML = "Card " + i.toString();
         tabList.push(tab);
         tabDiv.appendChild(tab);
     }
-    tabList[activeTab].style.backgroundColor = "#8888ff";
+    tabList[activeTab].style.backgroundColor = "#aaaaff";
 
     let activeTabIndex = 0;
     for (let j = 0; j < tabList.length; j++) {
@@ -179,7 +225,7 @@ function createCardTabs(tabDiv, counter, activeTab=0) {
             activeTabIndex = j;
             for (let k = 0; k < tabList.length; k++) {
                 if (k === j) {
-                    tabList[k].style.backgroundColor = "#8888ff";
+                    tabList[k].style.backgroundColor = "#aaaaff";
                 } else {
                     tabList[k].style.backgroundColor = "#f1f1f1";
                 }
@@ -189,6 +235,8 @@ function createCardTabs(tabDiv, counter, activeTab=0) {
 
     let plusTab = document.createElement("button");
     plusTab.innerHTML = "+";
+    plusTab.style.backgroundColor = "#aaffaa";
+    plusTab.classList.add("Jost");
 
     plusTab.addEventListener("click", function() {
         counter++;
@@ -199,6 +247,8 @@ function createCardTabs(tabDiv, counter, activeTab=0) {
     if (counter > 1) {
         let minusTab = document.createElement("button");
         minusTab.innerHTML = "-";
+        minusTab.style.backgroundColor = "#ffaaaa";
+        minusTab.classList.add("Jost");
 
         minusTab.addEventListener("click", function() {
             counter--;
@@ -212,6 +262,7 @@ function createCardTabs(tabDiv, counter, activeTab=0) {
 function createFrontBackTabs(tabDiv) {
     let frontTab = document.createElement("button");
     frontTab.innerHTML = "Front";
+    frontTab.classList.add("Jost");
 
     frontTab.onclick = function() {
         frontTab.style.backgroundColor = "#66ff66";
@@ -220,6 +271,7 @@ function createFrontBackTabs(tabDiv) {
 
     let backTab = document.createElement("button");
     backTab.innerHTML = "Back";
+    backTab.classList.add("Jost");
 
     backTab.onclick = function() {
         backTab.style.backgroundColor = "#66ff66";
