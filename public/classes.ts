@@ -71,6 +71,7 @@ export class Note {
     }
 }
 
+
 export class Card {
     cardType: CardType;
     frontHTML: string;
@@ -78,6 +79,7 @@ export class Card {
     dependents: Card[] = [];
     dependees: Card[] = [];
     peers: Card[] = [];
+    trackers: Tracker[] = [];
 
     constructor(cardType: CardType, frontHTML: string, backHTML: string, dependents: Card[], dependees: Card[], peers: Card[]) {
         this.cardType = cardType;
@@ -87,4 +89,84 @@ export class Card {
         this.dependees = dependees;
         this.peers = peers;
     }
+}
+
+export class Deck {
+    name: string;
+    noteList: Note[];
+    courses: Course[]; // If we want decks to be heritable from course to course/year to year within a school, then we may want a deck that belongs to multiple Courses (also if we have e.g. different sections of the same course; that might be another object?)
+
+    superdeck: Deck;
+    subdecks: Deck[];
+    notes: Note[];
+}
+
+
+//A laundry list of object classes, not all of which might necessarily make it into production
+
+export class District {
+    name: string;
+    schools: School[];
+}
+
+export class DistrictAdmin {
+    username: string;
+    district: District;
+}
+
+export class School {
+    name: string;
+    teachers: Teacher[];
+    courses: Course[];
+    students: Student[];
+    district: District;
+}
+
+export class SchoolAdmin {
+    username: string;
+    school: School;
+}
+
+export class Teacher {
+    username: string;
+    name: string;
+    school: School;
+    courses: Course[];
+
+}
+
+export class Course {
+    name: string;
+    teachers: Teacher[];
+    students: Student[];
+
+    //It should be able for Spanish II to "inherit" the decks from Spanish I
+    prereqs: Course[];
+    postreqs: Course[];
+}
+
+export class Student {
+    courses: Course[];
+    decks: Deck[];
+    username: string;
+
+}
+
+//Tracker is supposed to keep track of a student's card. This is closely related to Card and it is not yet clear what features belong to Card and which to Tracker. 
+
+// A plausible structure here is that "Cards" are mostly ghosts that exist mainly to generate Trackers, and mostly store a CardType and a Note. Then a tracker is instantiated for each student, and the tracker stores signposts to the right card type and note; during reviews the machine just summons the note data and feeds it into the card type to get the HTML. If this is the case, though, Card probably needs to know what its daughter trackers are so that it can assign and update dependency and peer relationships.
+export class Tracker {
+    card: Card;
+    student: Student;
+    dependents: Tracker[];
+    dependees: Tracker[];
+    peers: Tracker[];
+    interval: number; //in milliseconds? rounded to the nearest hour? day?
+    history: Review[];
+
+}
+
+export class Review {
+    time: number;
+    outcome: number; //1 for pass and 0 for fail, or maybe just use a boolean, though we should leave open the possibility of more sophisticated systems
 }
