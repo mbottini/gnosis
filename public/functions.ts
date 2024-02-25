@@ -1,7 +1,7 @@
 import { RegexMapping } from './classes';
 import { stringToStringDict, numToStringDict, numToStringListDict } from './types';
 
-// Start by getting the right list from the mapping. If we have <k> -> <к> but <kh> -> <х>, then we need to do <kh> -> <х> first.
+// Start by getting the right list from the mapping. If we have <s> -> <с> but <sh> -> <ш>, then we need to do <sh> -> <ш> first.
 
 function orderRegexKeys(allKeys: string[]): string[] {
     let lengthToLetter: numToStringListDict = {};
