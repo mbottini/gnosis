@@ -1,4 +1,5 @@
-
+import { appendWithDeadSpan, appendBreak, appendSpansToColumns } from './textFormattingFunctions.js';
+//This is the class constructor for the card template. Each card HTML dict looks like {"front": <frontHTML>, "back": <backHTML>}. 
 class cardTemplate {
     constructor(name, fields, fieldTypes, fieldSettingDicts, cards, cardHTMLDicts) {
         this.name = name;
@@ -52,6 +53,8 @@ function createRegexTable() {
 
     let addButton = document.createElement("button");
     addButton.innerHTML = "Add";
+    addButton.classList.add("jost");
+
     addButton.addEventListener("click", function() {
         let replacementDiv = createRegexPairing();
         topDiv.appendChild(replacementDiv);
@@ -64,6 +67,7 @@ function createRegexTable() {
 
     let submitButton = document.createElement("button");
     submitButton.innerHTML = "Create mapping";
+    submitButton.classList.add("jost");
     submitButton.addEventListener("click", function() {
         for (let i = 0; i < topDiv.children.length; i++) {
             let englishRegex = topDiv.children[i].children[0].value;
@@ -72,7 +76,6 @@ function createRegexTable() {
                 regexDictionary[englishRegex] = foreignRegex;
             }
         }
-        console.log(regexDictionary);
         popupWindow.close();
     });
     popupWindow.document.body.appendChild(submitButton);
@@ -105,7 +108,7 @@ function addFormatting() {
 
     let additionalFormatting = document.createElement("button");
     additionalFormatting.innerHTML = "Add another option";
-    additionalFormatting.classList.add("Jost");
+    additionalFormatting.classList.add("jost");
 
     popupWindow.document.body.appendChild(selectionDiv);
     popupWindow.document.body.appendChild(additionalFormatting);
@@ -133,55 +136,92 @@ function showSettingsWindow(setting){
     }
 }
 
-function createEditorInput(counter, thisDiv, inputBox, cardBox) {
-    inputBox.value += "{f" + counter.toString() + "}\n";
-    updateOutputBox(inputBox, cardBox);
+function createFieldSpan(nextFieldButton, inputBox, cardBox) {
+    let editorText = "";
+    let outerFieldSpan = document.createElement("span");
+    outerFieldSpan.style.width = "33%";
 
-    let fieldSpan = document.createElement("span");
-    fieldSpan.innerHTML = "Field " + counter.toString() + ": ";
-    fieldSpan.id = "field-" + counter.toString() + "input";
-    fieldSpan.style.padding = "5px";
+    let innerFieldSpan = document.createElement("span");
+    innerFieldSpan.innerHTML = "Add Field";
+    innerFieldSpan.classList.add("newField");
 
-    let fieldNameInput = document.createElement("input");
-    fieldNameInput.type = "text";
+    innerFieldSpan.addEventListener("click", function() {
+        outerFieldSpan.innerHTML = "";
+        let inputField = document.createElement("input");
+        inputField.type = "text";
+        inputField.style.width = "33%";
+        outerFieldSpan.appendChild(inputField);
+        inputField.focus();
 
-    let fieldTypeDropdown = document.createElement("select");
-    possibleFieldTypes(fieldTypeDropdown);
+        inputField.addEventListener("keydown", function(event) {
+            if (event.key === "Enter" && inputField.value != "") {
+                outerFieldSpan.innerHTML = "";
+                let replacementInnerSpan = document.createElement("span");
+                replacementInnerSpan.innerHTML = inputField.value;
+                appendWithDeadSpan(outerFieldSpan, replacementInnerSpan, "existingField", 20);
+                editorText = inputField.value;
+                inputBox.value += "{" + editorText + "}\n";
+                updateOutputBox(inputBox, cardBox);
+                nextFieldButton.click();
+            } else if (event.key === "Enter") {
+                outerFieldSpan.innerHTML = "";
+                appendWithDeadSpan(outerFieldSpan, innerFieldSpan, "newField", 20)
+            }
+        });
+    });
+        
+    appendWithDeadSpan(outerFieldSpan, innerFieldSpan, "newField", 20);
+    return outerFieldSpan;
+
+}
+
+function createEditorInput(thisDiv, inputBox, cardBox, nextFieldButton) {
+
+    let subDiv = document.createElement("div");
+    subDiv.style.width = "100%";
+    //inputBox.value += "{f" + counter.toString() + "}\n";
+    //updateOutputBox(inputBox, cardBox);
 
     let settingsButton = document.createElement("button");
     settingsButton.display = "inline";
     settingsButton.innerHTML = "Settings";
     settingsButton.classList.add("Jost");
-    
-    
+
+    let fieldSpan = createFieldSpan(nextFieldButton, inputBox, cardBox);
+
+    let fieldTypeDropdown = document.createElement("select");
+    //This seems to not *quite* work as intended?
+    possibleFieldTypes(fieldTypeDropdown);
+
     settingsButton.addEventListener("click", function() {
         showSettingsWindow(fieldTypeDropdown.value);
     });
     
     thisDiv.appendChild(fieldSpan);
-    thisDiv.appendChild(fieldNameInput);
     thisDiv.appendChild(fieldTypeDropdown);
     thisDiv.appendChild(settingsButton);
-
-    let breakLine = document.createElement("br");
-    thisDiv.appendChild(breakLine);
+    
+        
+    appendBreak(thisDiv);
 }
 
 
-function createDropdownMenu(topElement, counter, inputBox, cardBox) {
+function createDropdownMenu(topElement, inputBox, cardBox) {
     let thisDropdownArea = document.createElement("div");
+
     let nextButton = document.createElement("button");
     topElement.appendChild(thisDropdownArea);
     nextButton.innerHTML = "Add Field";
     nextButton.classList.add("Jost");
 
-    createEditorInput(counter, thisDropdownArea, inputBox, cardBox);
+    createEditorInput(thisDropdownArea, inputBox, cardBox, nextButton);
 
     nextButton.addEventListener("click", function() {
-        counter++;
-        createEditorInput(counter, thisDropdownArea, inputBox, cardBox);
+        createEditorInput(thisDropdownArea, inputBox, cardBox, nextButton);
     });
+    
 
+    appendBreak(topElement);
     topElement.appendChild(nextButton);
 }
 
@@ -190,23 +230,19 @@ function updateOutputBox(textBox, cardBox) {
     cardBox.innerHTML = outputText;
 }
 
-function createTextInput(cardBox) {
+
+function createTextInput() {
     let textBox = document.createElement("textarea");
     textBox.style.width = "100%";
     textBox.style.height = "80%";
+    textBox.style.fontSize = "16px";
     //textBox.type = "text";
     textBox.name = "cardName";
     textBox.id = "cardName";
-
-    textBox.oninput = function() {
-        updateOutputBox(textBox, cardBox);
-    }
-
     return textBox;
 }
 
 function createCardTabs(tabDiv, counter, activeTab=0) {
-    
     tabDiv.innerHTML = "";
     let tabList = [];
     for (let i = 1; i <= counter; i++) {
@@ -319,13 +355,12 @@ function createHTMLDisplay(cardBox) {
     blankDiv.style.height = "20%";
     thisDisplay.appendChild(blankDiv);
 
-    
-
     thisDisplay.appendChild(cardBox);
 
     return thisDisplay;
 }
 
+//Unsure exactly why I set this up as a class
 class PopupEditor {
     constructor() {
     }
@@ -338,6 +373,7 @@ class PopupEditor {
         let top = (window.screen.height - height) / 4;
         this.window.moveTo(left, top);
 
+        //man, some of this needs to be functions"
         this.window.editorDiv = document.createElement("div");
         this.window.editorDiv.style.width = "33%";
         this.window.editorDiv.style.height = "100%";
@@ -349,10 +385,11 @@ class PopupEditor {
         let cardBox = document.createElement("div");
         cardBox.style = "border-style: solid; border-width: 2px; border-color: black; height: 50%; width: 80%; text-align: center";
 
-        let textInput = createTextInput(cardBox);
+        let cardCollectionDict = {};
 
-        let fieldCounter = 1;
-        createDropdownMenu(this.window.editorDiv, fieldCounter, textInput, cardBox); 
+        let textInput = createTextInput();
+
+        createDropdownMenu(this.window.editorDiv, textInput, cardBox); 
 
         this.window.textBox = document.createElement("div");
         this.window.textBox.style.width = "33%";
@@ -367,6 +404,10 @@ class PopupEditor {
         this.window.document.body.appendChild(createHTMLDisplay(cardBox));
 
         updateOutputBox(textInput, cardBox);
+
+        textInput.oninput = function() {
+            updateOutputBox(textInput, cardBox);
+        }
     }
     hidePopup() {
         this.window.close();
