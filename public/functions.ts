@@ -23,7 +23,7 @@ function orderRegexKeys(allKeys: string[]): string[] {
     return finalList;
 }
 
-//No reason to order the keys every time--make sure this comes pre-ordered.
+//No reason to order the keys every time--make sure this comes pre-ordered. Check this tomorrow, it's almost assuredly quite off
 export function applyRegexMapping(datum: string, thisRegex: RegexMapping): string {
     let newDatum = datum;
     let unorderedKeys = Object.keys(thisRegex.regexDict);
